@@ -1,0 +1,26 @@
+{
+  "name": "sf-i18n",
+  "version": "1.0.0",
+  "description": "Scripts for companies",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/caohonghai/sf-i18n.git"
+  },
+  "keywords": [
+    "vue",
+    "i18n"
+  ],
+  "author": "caohonghai",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/caohonghai/sf-i18n/issues"
+  },
+  "homepage": "https://github.com/caohonghai/sf-i18n#readme",
+  "dependencies": {
+    "typescript": "^4.9.4"
+  }
+}
