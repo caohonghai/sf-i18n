@@ -1,10 +1,11 @@
 import type { Options } from 'prettier';
 
 export type Config = {
+	root?: string;
 	entry: string;
 	project: string;
-	modules?: string;
-	globalLang: string;
+	modules: string;
+	globalLang: string[];
 	loadGlobalLang: boolean;
 	skipTranslate: boolean;
 	locales?: string[];

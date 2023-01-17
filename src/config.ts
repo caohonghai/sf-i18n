@@ -1,16 +1,19 @@
 import { Config } from './types';
 
 const config: Config = {
+	/** Root path */
+	root: '/Users/caohonghai/Desktop/webmanager',
 	/** Module entry */
 	entry: 'modules',
 	/** Project name */
 	project: 'ETL',
-	/** Specific module: Without this parameter, the entire project is recursed by default. */
+	/** Specific module */
 	modules: 'accessManage',
 	/** The prettier formatting code is used */
 	prettier: {},
 	/** The common language package path */
-	globalLang: '/assets/lang/zh_CN.json',
+	globalLang: ['assets', 'lang', 'zh_CN.json'],
+	// globalLang: ['src', 'test', 'zh_CN.json'],
 	/** Whether to load the global language package */
 	loadGlobalLang: true,
 	/** Whether to skip translation */
