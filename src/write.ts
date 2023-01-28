@@ -9,6 +9,8 @@ import * as reg from './utils/reg';
 
 let langMap: Map<string, string> = new Map();
 let langSet: Set<string> = new Set();
+// 记录是否已经转换过。
+let flag: boolean = false;
 
 const enterVueFile = (pathName: string): void => {
 	let data: string = fs.readFileSync(pathName, 'utf-8');
@@ -20,17 +22,21 @@ const enterVueFile = (pathName: string): void => {
 	// 2. template script 分别去替换
 	data = data.replace(reg.templateLabel, template);
 	data = data.replace(reg.scriptLabel, script);
-	fs.writeFile(pathName, data, (err) => {
-		console.log(chalk.green(`${pathName} saved!`));
-	});
+	if (data !== fs.readFileSync(pathName, 'utf-8')) {
+		fs.writeFileSync(pathName, data);
+		console.log(chalk.green(`Vue File: ${pathName} saved!`));
+		flag = true;
+	}
 };
 
 const enterJSFile = (pathName: string) => {
 	let data: string = fs.readFileSync(pathName, 'utf-8');
-	const script = regReplace(data, 'script', langMap);
-	fs.writeFile(pathName, script, (err) => {
-		console.log(`${pathName} saved!`);
-	});
+	const script = regReplace(data, 'js', langMap);
+	if (script !== data) {
+		fs.writeFileSync(pathName, script);
+		console.log(chalk.blue(`JS File: ${pathName} saved!`));
+		flag = true;
+	}
 };
 
 const write = (configPath: string): void => {
@@ -69,7 +75,17 @@ const write = (configPath: string): void => {
 		if (/.(vue)$/.test(path)) {
 			enterVueFile(path);
 		}
+		if (/.(js)$/.test(path)) {
+			enterJSFile(path);
+		}
 	});
+	if (!flag) {
+		console.log(
+			chalk.yellow(
+				'There is no content in the current directory that needs to be converted for internationalization.'
+			)
+		);
+	}
 };
 
 export default write;

@@ -1,4 +1,5 @@
 import * as reg from './reg';
+import chalk from 'chalk';
 
 /** 兼容性问题 用 new RegExp 来解决 */
 const regReplace = (
@@ -14,6 +15,9 @@ const regReplace = (
 		// 防止相同的内容重复替换。
 		const st: Set<string> = new Set();
 		regArray.forEach((str) => {
+			if (str.includes('$t')) {
+				return;
+			}
 			const _s = str.trim();
 			if (!(_s[0] === ':' || _s[0] === '@')) {
 				// label="测试" => :label="测试"
@@ -29,6 +33,13 @@ const regReplace = (
 				tempStr = tempStr.replace(reg.quoteRegxp, i18n);
 				if (!st.has(cn)) {
 					context = context.replace(new RegExp(str, 'g'), tempStr);
+				} else {
+					console.log(
+						chalk.red(
+							`There are undefined fields, please run the 'sf read' or 'sf r'`
+						)
+					);
+					process.exit(1);
 				}
 				st.add(cn);
 			} else {
@@ -37,9 +48,14 @@ const regReplace = (
 					const _cn = cn.slice(1, cn.length - 1).trim();
 					const i18n = `$t('${langMap.get(_cn)}', '${_cn}')`;
 					if (!st.has(_cn)) {
-						// console.log(cn);
-						// console.log(_cn);
 						context = context.replace(new RegExp(cn, 'g'), i18n);
+					} else {
+						console.log(
+							chalk.red(
+								`There are undefined fields, please run the 'sf read' or 'sf r'`
+							)
+						);
+						process.exit(1);
 					}
 					st.add(_cn);
 				});
@@ -48,6 +64,9 @@ const regReplace = (
 		// 2. match label
 		regArray = [...new Set(context.match(reg.labelRegexp))] || [];
 		regArray.forEach((str) => {
+			if (str.includes('$t')) {
+				return;
+			}
 			let _s = str.slice(1, str.length - 1).trim();
 			if (_s.includes('{{')) {
 				// 为了匹配Lang 包的value 需要先处理来保持一直
@@ -75,17 +94,56 @@ const regReplace = (
 				if (langMap.has(_s)) {
 					const i18n = `> {{ $t('${langMap.get(_s)}', '${_s}') }} <`;
 					context = context.replace(new RegExp(str, 'g'), i18n);
+				} else {
+					console.log(
+						chalk.red(
+							`There are undefined fields, please run the 'sf read' or 'sf r'`
+						)
+					);
+					process.exit(1);
 				}
 			}
 		});
-	} else {
+	} else if (tag === 'script') {
 		// 防止重复执行 replace
 		const regArray = [...new Set(context.match(reg.jsWord))] || [];
 		// 遍历每条 中文 替换 context
 		regArray.forEach((str) => {
+			if (str[str.length - 1] === ')') {
+				return;
+			}
 			const tempStr = str.slice(1, str.length - 1).trim();
 			if (langMap.has(tempStr)) {
 				const replaceStr = `this.$t('${langMap.get(
+					tempStr
+				)}', '${tempStr}')`;
+				context = context.replace(new RegExp(str, 'g'), replaceStr);
+			} else {
+				console.log(
+					chalk.red(
+						`There are undefined fields, please run the 'sf read' or 'sf r'`
+					)
+				);
+				process.exit(1);
+			}
+		});
+	} else {
+		/** 处理 JS 文件 */
+		// 防止重复执行 replace
+		const regArray = [...new Set(context.match(reg.jsWord))] || [];
+		const t = `import { i18n$t } from 'javascript@/i18n';`;
+		// 没有倒入 i18n 包时，需要进行导入。
+		if (regArray.length !== 0 && !context.includes(t)) {
+			context = `${t}\n` + context;
+		}
+		// 遍历每条 中文 替换 context
+		regArray.forEach((str) => {
+			if (str[str.length - 1] === ')') {
+				return;
+			}
+			const tempStr = str.slice(1, str.length - 1).trim();
+			if (langMap.has(tempStr)) {
+				const replaceStr = `i18n$t('${langMap.get(
 					tempStr
 				)}', '${tempStr}')`;
 				context = context.replace(new RegExp(str, 'g'), replaceStr);

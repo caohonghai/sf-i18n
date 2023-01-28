@@ -103,15 +103,20 @@ const read = (configPath: string): void => {
 	});
 	console.log(chalk.green('modulePath:'), chalk.blue(modulePath));
 	console.log(chalk.green('globalPath:'), chalk.blue(globalPath));
-	// 修改成同步执行
-	fs.writeFileSync(globalPath, JSON.stringify(g));
-	console.log(chalk.green('=== global saved! ==='));
+
+	if (config.loadGlobalLang) {
+		// 修改成同步执行
+		fs.writeFileSync(globalPath, JSON.stringify(g));
+		console.log(chalk.green('=== global saved! ==='));
+	}
+
 	fs.writeFileSync(
+		// 模块内的语言包路径
 		getAbsolutePath(modulePath, 'assets', 'lang', 'zh_CN.json'),
-		// getAbsolutePath(modulePath, 'zh_CN.json'),
 		JSON.stringify(l[modules])
 	);
 	console.log(chalk.green('=== module saved! ==='));
+
 	console.log(
 		chalk.yellow(
 			`Check if there are any unnecessary fields in the Chinese language package, please delete them manually.\nIf there are no fields that need to be removed, please run the 'sf write' or 'sf w' to replace the relevant internationalization.`

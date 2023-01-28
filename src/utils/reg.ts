@@ -32,7 +32,7 @@ const templateLabel = /\<template[\s\S]*\/template>/g;
 // 匹配 script 标签
 const scriptLabel = /\<script[\s\S]*\/script>/g;
 // 匹配 JS/script 中的中文
-const jsWord = /'[^'\r\n]*[\u4E00-\u9FA5]+[^'\r\n{}]*'/g;
+const jsWord = /'[^'\r\n]*[\u4E00-\u9FA5]+[^'\r\n{}]*'[)]{0,1}/g;
 // 匹配 template 中 双引号的属性
 const propertyRegexp = /\s\S+=["'][^"]*[\u4e00-\u9fa5]+[^">]*["']/g;
 // 引号中的中文
