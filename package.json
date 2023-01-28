@@ -1,6 +1,6 @@
 {
 	"name": "sf-i18n-cli",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "Scripts for companies, Internationalization.",
 	"types": "types/index.d.ts",
 	"bin": {
