@@ -4,19 +4,8 @@ import loadLanguage from './utils/lang';
 import { LangObject } from './types/index.d';
 import chalk from 'chalk';
 import fs from 'fs-extra';
-import path from 'path';
 import _ from 'lodash';
-
-const traversalDir = (dir: string, callback: Function): void => {
-	fs.readdirSync(dir).forEach((file) => {
-		const pathName = path.join(dir, file);
-		if (fs.statSync(pathName).isDirectory()) {
-			traversalDir(pathName, callback);
-		} else {
-			callback(pathName);
-		}
-	});
-};
+import traversalDir from './utils/traveralDir';
 
 const moduleMap: Map<string, number> = new Map();
 const repeatMoreThanFive: Set<string> = new Set();
@@ -32,10 +21,12 @@ const enterFile = (pathName: string): void => {
 		let key = str.slice(1, str.length - 1).trim();
 		// 可能有 插值语法
 		if (key.includes('{{')) {
+			/** 别用 replaceAll 有兼容性问题 node环境下需要 15.0.0 */
+			/** https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replaceAll#browser_compatibility */
 			key = key
-				.replaceAll('{{', '{')
-				.replaceAll('}}', '}')
-				.replaceAll('.', '');
+				.replace(/({{)/g, '{')
+				.replace(/(}})/g, '}')
+				.replace(/(\.)/g, '');
 		}
 		moduleMap.set(key, (moduleMap.get(key) ?? 0) + 1);
 		if ((moduleMap.get(key) ?? 0) >= 5) repeatMoreThanFive.add(key);
@@ -66,13 +57,14 @@ const read = (configPath: string): void => {
 
 	const mLang: Language = loadLanguage(
 		require(getAbsolutePath(modulePath, 'assets', 'lang', 'zh_CN.json')),
-		modules
+		modules,
+		'read'
 	);
 	langMap = mLang.langMap;
 	langSet = mLang.langSet;
 
 	if (config.loadGlobalLang) {
-		const lang: Language = loadLanguage(globalLanguage);
+		const lang: Language = loadLanguage(globalLanguage, '', 'read');
 		console.log(langMap);
 		langMap = new Map<string, string>([...lang.langMap, ...langMap]);
 		console.log(langMap);
@@ -119,8 +111,8 @@ const read = (configPath: string): void => {
 		console.log('global saved!');
 	});
 	fs.writeFile(
-		// getAbsolutePath(modulePath, 'assets', 'lang', 'zh_CN.json'),
-		getAbsolutePath(modulePath, 'zh_CN.json'),
+		getAbsolutePath(modulePath, 'assets', 'lang', 'zh_CN.json'),
+		// getAbsolutePath(modulePath, 'zh_CN.json'),
 		JSON.stringify(l[modules]),
 		(err) => {
 			if (err) {

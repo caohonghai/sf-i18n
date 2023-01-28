@@ -5,6 +5,10 @@ import log from './utils/log';
 import { program } from 'commander';
 import { getAbsolutePath } from './utils/getAbsolutePath';
 import { CONFIGURATION_NAME } from './utils/constants';
+import write from './write';
+
+/** check whether the configuration file exists */
+const configPath: string = getAbsolutePath(process.cwd(), CONFIGURATION_NAME);
 
 /** Initialize a configuration file in the project */
 program
@@ -21,11 +25,6 @@ program
 	.alias('r')
 	.description('Recursively matches the Chinese of the module')
 	.action(() => {
-		/** check whether the configuration file exists */
-		const configPath: string = getAbsolutePath(
-			process.cwd(),
-			CONFIGURATION_NAME
-		);
 		if (!fs.existsSync(configPath)) {
 			log.warning(
 				`The configuration file path does not exist.\nRun the 'sf init' or 'sf i' command first`
@@ -35,4 +34,11 @@ program
 		}
 	});
 
+program
+	.command('write')
+	.alias('w')
+	.description('Write internationalization to files.')
+	.action(() => {
+		write(configPath);
+	});
 program.parse(process.argv);
