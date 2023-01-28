@@ -11,7 +11,6 @@ const moduleMap: Map<string, number> = new Map();
 const repeatMoreThanFive: Set<string> = new Set();
 
 const enterFile = (pathName: string): void => {
-	console.log(pathName);
 	const data: string = fs.readFileSync(pathName, 'utf-8');
 	const arr: RegExpMatchArray | Array<string> =
 		data.match(
@@ -65,9 +64,7 @@ const read = (configPath: string): void => {
 
 	if (config.loadGlobalLang) {
 		const lang: Language = loadLanguage(globalLanguage, '', 'read');
-		console.log(langMap);
 		langMap = new Map<string, string>([...lang.langMap, ...langMap]);
-		console.log(langMap);
 		langSet = new Set<string>([...lang.langSet, ...langSet]);
 	}
 
@@ -104,27 +101,22 @@ const read = (configPath: string): void => {
 		}
 		_.set(g, key, val);
 	});
-	fs.writeFile(globalPath, JSON.stringify(g), (err) => {
-		if (err) {
-			console.error(err);
-		}
-		console.log('global saved!');
-	});
-	fs.writeFile(
+	console.log(chalk.green('modulePath:'), chalk.blue(modulePath));
+	console.log(chalk.green('globalPath:'), chalk.blue(globalPath));
+	// 修改成同步执行
+	fs.writeFileSync(globalPath, JSON.stringify(g));
+	console.log(chalk.green('=== global saved! ==='));
+	fs.writeFileSync(
 		getAbsolutePath(modulePath, 'assets', 'lang', 'zh_CN.json'),
 		// getAbsolutePath(modulePath, 'zh_CN.json'),
-		JSON.stringify(l[modules]),
-		(err) => {
-			if (err) {
-				console.error(err);
-			}
-			console.log('module saved!');
-		}
+		JSON.stringify(l[modules])
 	);
-	console.log(config);
-	console.log(langMap.size, langSet.size);
-	console.log(chalk.red(modulePath), chalk.green('modulePath'));
-	console.log(chalk.red(globalPath), chalk.green('globalPath'));
+	console.log(chalk.green('=== module saved! ==='));
+	console.log(
+		chalk.yellow(
+			`Check if there are any unnecessary fields in the Chinese language package, please delete them manually.\nIf there are no fields that need to be removed, please run the 'sf write' or 'sf w' to replace the relevant internationalization.`
+		)
+	);
 };
 
 export default read;

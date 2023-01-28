@@ -34,11 +34,18 @@ program
 		}
 	});
 
+/** Write specific modules to internationalization */
 program
 	.command('write')
 	.alias('w')
 	.description('Write internationalization to files.')
 	.action(() => {
-		write(configPath);
+		if (!fs.existsSync(configPath)) {
+			log.warning(
+				`The configuration file path does not exist.\nRun the 'sf init' or 'sf i' command first`
+			);
+		} else {
+			write(configPath);
+		}
 	});
 program.parse(process.argv);

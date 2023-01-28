@@ -2,6 +2,7 @@ import { Config, LangObject, Language } from '../types';
 import { getAbsolutePath } from './utils/getAbsolutePath';
 import loadLanguage from './utils/lang';
 import traversalDir from './utils/traveralDir';
+import chalk from 'chalk';
 import fs from 'fs-extra';
 import regReplace from './utils/regReplace';
 import * as reg from './utils/reg';
@@ -20,7 +21,7 @@ const enterVueFile = (pathName: string): void => {
 	data = data.replace(reg.templateLabel, template);
 	data = data.replace(reg.scriptLabel, script);
 	fs.writeFile(pathName, data, (err) => {
-		// console.log(`${pathName} saved!`);
+		console.log(chalk.green(`${pathName} saved!`));
 	});
 };
 
@@ -69,7 +70,6 @@ const write = (configPath: string): void => {
 			enterVueFile(path);
 		}
 	});
-	console.log(langMap);
 };
 
 export default write;
