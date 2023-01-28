@@ -1,4 +1,4 @@
-import { Config, LangObject, Language } from './types';
+import { Config, LangObject, Language } from '../types';
 import { getAbsolutePath } from './utils/getAbsolutePath';
 import loadLanguage from './utils/lang';
 import traversalDir from './utils/traveralDir';

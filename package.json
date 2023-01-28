@@ -1,7 +1,7 @@
 {
-	"name": "sf-i18n",
+	"name": "sf-i18n-cli",
 	"version": "1.0.0",
-	"description": "Scripts for companies",
+	"description": "Scripts for companies, Internationalization.",
 	"types": "types/index.d.ts",
 	"bin": {
 		"sf": "bin/index.js"
@@ -13,6 +13,12 @@
 		"dev": "tsc --watch",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
+	"files": [
+		"bin",
+		"dist",
+		"types",
+		"README.md"
+	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/caohonghai/sf-i18n.git"

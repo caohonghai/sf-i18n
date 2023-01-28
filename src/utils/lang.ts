@@ -1,4 +1,4 @@
-import { LangObject, Language } from '../types';
+import { LangObject, Language } from '../../types';
 
 const mp: Map<string, string> = new Map();
 const st: Set<string> = new Set();

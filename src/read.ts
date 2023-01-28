@@ -1,7 +1,7 @@
-import { Config, Language } from './types';
+import { Config, Language } from '../types';
 import { getAbsolutePath } from './utils/getAbsolutePath';
 import loadLanguage from './utils/lang';
-import { LangObject } from './types/index.d';
+import { LangObject } from '../types';
 import chalk from 'chalk';
 import fs from 'fs-extra';
 import _ from 'lodash';
