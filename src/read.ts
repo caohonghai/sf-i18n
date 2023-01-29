@@ -14,7 +14,7 @@ const enterFile = (pathName: string): void => {
 	const data: string = fs.readFileSync(pathName, 'utf-8');
 	const arr: RegExpMatchArray | Array<string> =
 		data.match(
-			/['"`>](\s)*[^"`'<>/\r\n]*[\u4E00-\u9FA5]+[^"'`/<>*\r\n]*(\s)*['"`<]/g
+			/['"`>](\s)*[^"`'<>\r\n]*[\u4E00-\u9FA5]+[^"'`<>*\r\n]*(\s)*['"`<]/g
 		) || [];
 	for (const str of arr) {
 		let key = str.slice(1, str.length - 1).trim();

@@ -33,13 +33,6 @@ const regReplace = (
 				tempStr = tempStr.replace(reg.quoteRegxp, i18n);
 				if (!st.has(cn)) {
 					context = context.replace(new RegExp(str, 'g'), tempStr);
-				} else {
-					console.log(
-						chalk.red(
-							`There are undefined fields, please run the 'sf read' or 'sf r'`
-						)
-					);
-					process.exit(1);
 				}
 				st.add(cn);
 			} else {
@@ -49,13 +42,6 @@ const regReplace = (
 					const i18n = `$t('${langMap.get(_cn)}', '${_cn}')`;
 					if (!st.has(_cn)) {
 						context = context.replace(new RegExp(cn, 'g'), i18n);
-					} else {
-						console.log(
-							chalk.red(
-								`There are undefined fields, please run the 'sf read' or 'sf r'`
-							)
-						);
-						process.exit(1);
 					}
 					st.add(_cn);
 				});
@@ -94,13 +80,6 @@ const regReplace = (
 				if (langMap.has(_s)) {
 					const i18n = `> {{ $t('${langMap.get(_s)}', '${_s}') }} <`;
 					context = context.replace(new RegExp(str, 'g'), i18n);
-				} else {
-					console.log(
-						chalk.red(
-							`There are undefined fields, please run the 'sf read' or 'sf r'`
-						)
-					);
-					process.exit(1);
 				}
 			}
 		});
@@ -118,13 +97,6 @@ const regReplace = (
 					tempStr
 				)}', '${tempStr}')`;
 				context = context.replace(new RegExp(str, 'g'), replaceStr);
-			} else {
-				console.log(
-					chalk.red(
-						`There are undefined fields, please run the 'sf read' or 'sf r'`
-					)
-				);
-				process.exit(1);
 			}
 		});
 	} else {
